@@ -7,6 +7,9 @@ import platform
 # Here you can modify the bot's prefix and description and wether it sends help in direct messages or not.
 client = Bot(description="Basic Bot by Ellimist#2651", command_prefix="!", pm_help = False)
 
+# Dictionary of trigger words that the bot will act upon
+triggerDict = {}
+
 # This is what happens everytime the bot launches. In this case, it prints information like server count, user count the bot is connected to, and the bot id in the console.
 # Do not mess with it because the bot can break, if you wish to do so, please consult me or someone trusted.
 @client.event
@@ -25,21 +28,41 @@ async def on_ready():
 	print('Created by Ellimist#2651')
 	return await client.change_presence(game=discord.Game(name='Online')) #This is buggy, let us know if it doesn't work.
 
-@client.event
-async def on_message(message):
-        if message.author.id != client.user.id:
-                await client.send_message(message.channel, message.content)
-
 # This is a basic example of a call and response command. You tell it do "this" and it does it.
-@client.command()
-async def ping(*args):
+# @client.command()
+# async def ping(*args):
 
-	await client.say(":ping_pong: Pong!")
-	await asyncio.sleep(3)
+# 	await client.say(":ping_pong: Pong!")
+# 	await asyncio.sleep(3)
         # use the line below for warnings
         # await client.say(":warning: This bot was created by **Habchy#1665**, it seems that you have not modified it yet. Go edit the file and try it out!")
-# After you have modified the code, feel free to delete the line above so it does not keep popping up everytime you initiate the ping commmand.
-	
+
+@client.command()
+async def addTrigger(key, value):    # *args are used for untermined number of args
+        """Adds a trigger to the triggerDict with the first message as key and the next as value"""
+        await client.say("Add trigger")
+        triggerDict[key] = value
+        await client.say('Trigger: {}, response: {}'.format(key, value))
+        print(triggerDict)
+
+@client.command()
+async def rmTrigger(key):
+        """Removes from the triggerDict"""
+        if key in triggerDict:
+                del triggerDict[key]
+                await client.say('Removed trigger: {}'.format(key))
+                print(triggerDict)
+
+@client.event
+async def on_message(message):
+        if message.author.id != client.user.id: # check to see if the message is sent by the user and not the bot
+                # await client.send_message(message.channel, message.content)
+                await client.process_commands(message) # added this to allow the command functions to work. on_message interupts commands or else
+                for word in message.content.split():
+                        if word in triggerDict:
+                                await client.send_message(message.channel, triggerDict[word])
+                                return                
+	        
 client.run('NDE5NjY3MzgwNzc2NTk5NTUy.DXzdQA.bpiYB0TbccZzGhOs4k9r3UmzzD4')
 
 # Basic Bot was created by Habchy#1665
