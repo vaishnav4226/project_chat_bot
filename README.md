@@ -1,7 +1,7 @@
 # Project Chat Bot
 Python chat bot (discord.py) that can be invited to a Discord Server by the admin.
 
-Project was based on the this(https://github.com/Habchy/BasicBot/wiki) tutorial by Habchy.
+Project was based on the [this](https://github.com/Habchy/BasicBot/wiki) tutorial by Habchy.
 
 ## Features:
 Bot can respond to user posts if the admin sets a specific trigger.
